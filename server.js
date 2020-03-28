@@ -1,8 +1,15 @@
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const schema = require('./schema');
-// const schema = require('./schemaExample');
+const { makeExecutableSchema } = require('graphql-tools');
+const typeDefs = require('./schema');
+const resolvers = require('./resolvers');
 const app = express();
+
+// Combines our type definitions and resolvers to create an executable schema
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers
+});
 
 app.use(
   '/graphql',

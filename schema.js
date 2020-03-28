@@ -1,44 +1,19 @@
-const axios = require('axios');
-
-const {
-  GraphQLObjectType,
-  GraphQLInt,
-  GraphQLString,
-  GraphQLList,
-  GraphQLSchema
-} = require('graphql');
-
-const CountryType = new GraphQLObjectType({
-  name: 'Country',
-  fields: () => ({
-    stats: { type: StatsType }
-  })
-});
-
-const StatsType = new GraphQLObjectType({
-  name: 'Stats',
-  fields: () => ({
-    date: { type: GraphQLString },
-    confirmed: { type: GraphQLInt },
-    deaths: { type: GraphQLInt },
-    recovered: { type: GraphQLInt }
-  })
-});
-
-const RootQuery = new GraphQLObjectType({
-  name: 'RootQueryType',
-  fields: {
-    countries: {
-      type: CountryType,
-      resolve(parent, args) {
-        return axios
-          .get('https://pomber.github.io/covid19/timeseries.json')
-          .then(res => res.data);
-      }
-    }
+// Here we are defining the type definitions of the GraphQL schema
+const typeDefs = `
+  # Here we are defining our root Query object
+  # This is the entry point of all queries
+  type Query {
+    # The countries field takes a country argument, that is required
+    # This field will return an array of objects that are of type Stats
+    countries(country: String!): [Stats]!
   }
-});
 
-module.exports = new GraphQLSchema({
-  query: RootQuery
-});
+  type Stats {
+    date: String!
+    confirmed: String!
+    deaths: Int!
+    recovered: Int!
+  }
+`;
+
+module.exports = typeDefs;
