@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 // Here we are defining the type definitions of the GraphQL schema
 const typeDefs = `
   # Here we are defining our root Query object
