@@ -1,21 +1,20 @@
 const axios = require('axios');
+
 const {
   GraphQLObjectType,
-  GraphQLList,
   GraphQLInt,
   GraphQLString,
+  GraphQLList,
   GraphQLSchema
 } = require('graphql');
 
-// Country Type
 const CountryType = new GraphQLObjectType({
   name: 'Country',
   fields: () => ({
-    country: { type: new GraphQLList(StatsType) }
+    stats: { type: StatsType }
   })
 });
 
-// Stats Type
 const StatsType = new GraphQLObjectType({
   name: 'Stats',
   fields: () => ({
@@ -27,13 +26,15 @@ const StatsType = new GraphQLObjectType({
 });
 
 const RootQuery = new GraphQLObjectType({
-  name: 'Root Query',
-  countries: {
-    type: new GraphQLObjectType(CountryType),
-    resolve(parent, args) {
-      return axios
-        .get('https://pomber.github.io/covid19/timeseries.json')
-        .then(res => res.data);
+  name: 'RootQueryType',
+  fields: {
+    countries: {
+      type: CountryType,
+      resolve(parent, args) {
+        return axios
+          .get('https://pomber.github.io/covid19/timeseries.json')
+          .then(res => res.data);
+      }
     }
   }
 });
